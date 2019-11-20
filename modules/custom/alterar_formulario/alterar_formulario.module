@@ -1,0 +1,126 @@
+<?php
+
+function alterar_formulario_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if( $form_id == 'node_article_edit_form' ){
+    //ksm($form);
+    //ksm($form_state);
+    //dpm($form_id);
+
+
+
+    //Cómo añadir texto placeholder al elemento INPUT 'celular'
+    //Forma 1:
+    //$form['field_celular']['widget']['0']['value']['#placeholder'] = 'Indique celular';
+    //Forma 2:
+    $form['field_celular']['widget']['0']['value']['#attributes']['placeholder'] = 'Indique su celular';
+
+    //Cómo añadir una clase al elemento INPUT 'celular'
+    $form['field_celular']['widget']['0']['value']['#attributes']['class'][] = 'nueva-clase';
+
+    //Cómo añadir un estyle al elemento INPUT 'celular'
+    //$form['field_celular']['widget']['0']['value']['#attributes']['style'] = 'background-color:red;';
+
+
+    //Cómo añadir una descripción al elemento INPUT 'celular'
+    $form['field_celular']['widget']['0']['value']['#description'] = 'Complete este campo';
+
+    //Como hacer requerido el campo
+    //NO FUNCIONAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    $form['field_celular']['widget']['#required'] = true;
+    //$form['field_celular']['widget']['0']['#required'] = true;
+    //NO FUNCIONAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+    //*******************************************************************
+    // INCLUIR CONTENEDOR DE TIPO FIELDSET:
+    //********************************************************************
+    $form['fieldset_datos_articulos'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Datos del artículo'),
+    );
+
+    $form['fieldset_datos_articulos']['body'] = $form['body'];
+    $form['fieldset_datos_articulos']['title'] = $form['title'];
+
+    hide($form['body']);
+    hide($form['title']);
+
+    //*******************************************************************
+    // INCLUIR CONTENEDOR DE TIPO DETAIL:
+    //********************************************************************
+    $form['Vendedor'] = array(
+      '#type' => 'details',
+      '#title' => t('Vendedor'),
+      '#open' => true
+    );
+
+    $form['Vendedor']['field_nombre_y_apellido_anuncian'] = $form['field_nombre_y_apellido_anuncian'];
+    $form['Vendedor']['field_correo_anunciante'] = $form['field_correo_anunciante'];
+    $form['Vendedor']['field_celular'] = $form['field_celular'];
+
+    hide($form['field_nombre_y_apellido_anuncian']);
+    hide($form['field_correo_anunciante']);
+    hide($form['field_celular']);
+
+    //*******************************************************************
+    // INCLUIR AGRUPACION DE CAMPOS CON VERTICAL TABS:
+    //(es un contenedor de contenedores)
+    //********************************************************************
+    $form['information'] = array(
+      '#type' => 'vertical_tabs',
+      '#default_tab' => 'edit-publication',
+      '#title' => t('Información'),
+    );
+    //*******************************************************************
+
+    $form['details_grupo1'] = array(
+      '#type' => 'details',
+      '#title' => t('Grupo1'),
+      '#group' => 'information',
+    );
+
+    $form['details_grupo1']['field_tags'] = $form['field_tags'];
+    $form['details_grupo1']['field_image'] = $form['field_image'];
+
+    hide($form['field_tags']);
+    hide($form['field_image']);
+
+
+    $form['details_grupo2'] = array(
+      '#type' => 'details',
+      '#title' => t('Grupo2'),
+      '#group' => 'information',
+    );
+
+    $form['details_grupo2']['field_paquetes'] = $form['field_paquetes'];
+    $form['details_grupo2']['field_precio'] = $form['field_precio'];
+
+    hide($form['field_paquetes']);
+    hide($form['field_precio']);
+
+    //*******************************************************************
+    // INCLUIR BOTÓN SUBMIT:
+    //********************************************************************
+    $form['actions']['submit_cancelar'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancelar'),
+    '#submit' => array('cancelar_ok'),
+    '#weight' => 13,
+    );
+  }
+}
+
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+function cancelar_ok(){
+
+  drupal_set_message(t('Cambios cancelados'));
+  $response = new RedirectResponse(\Drupal::url('<front>'), 302);
+  $response->send();
+
+}
+
+
+
+
+
+?>
