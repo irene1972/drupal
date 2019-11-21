@@ -1,0 +1,6 @@
+name: Form Example
+description: Crearemos formularios de ejemplo
+package: Irene Olmos
+
+type: module
+core: 8.x

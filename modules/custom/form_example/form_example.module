@@ -1,0 +1,18 @@
+<?php
+
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+function form_example_cancelar(){
+
+ global $base_url;
+ //dpm($base_url);
+
+ drupal_set_message(t('Acción Cancelada!'), 'error');
+
+ $respuesta = new RedirectResponse($base_url, 302);
+ $respuesta->send();
+ return;
+
+}
+
+?>
