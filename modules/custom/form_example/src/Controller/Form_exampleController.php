@@ -5,6 +5,7 @@ namespace Drupal\form_example\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
+use Drupal\form_example\Form\editform;
 /**
  * Defines HelloController class.
  */
@@ -16,6 +17,20 @@ class Form_exampleController extends ControllerBase {
    * @return array
    *   Return markup array.
    */
+
+    public function mostrarunregistro($arg) {
+      $contenido = [];
+
+      $contenido['linea1'] = array(
+                                    '#markup' => '<strong>Esta información es confidencial. El id del registro es: ' . $arg . '</strong><br>',
+                                  );
+
+      $registro = [];
+      $registro = editform::listarunregistro($arg);
+      ksm($registro);
+
+      return $contenido;
+    }
 
     public function mostrartodo() {
       $contenido = [];

@@ -21,3 +21,19 @@ form_example.editform:
     _form: '\Drupal\form_example\Form\editform'
   requirements:
     _permission: 'access content'
+
+form_example.deleteform:
+  path: '/form_example/{arg}/delete'
+  defaults:
+    _title: '¿Deseas eliminar este registro?'
+    _form: '\Drupal\form_example\Form\deleteform'
+  requirements:
+    _permission: 'access content'
+
+form_example.mostrarunregistro:
+  path: '/form_example/{arg}'
+  defaults:
+    _controller: '\Drupal\form_example\Controller\Form_exampleController::mostrarunregistro'
+    _title: 'Información Personal'
+  requirements:
+    _permission: 'access content'
