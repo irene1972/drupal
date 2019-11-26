@@ -1,0 +1,6 @@
+form_example.links:
+  title: 'Form example'
+  #description: 'example of how to make an admin settings page link'
+  #parent: system.admin_config_development
+  route_name: form_example.mostrartodo
+  #weight: 100
