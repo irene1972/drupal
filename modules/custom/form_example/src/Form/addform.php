@@ -137,14 +137,33 @@
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     global $base_url;
-    //dpm($base_url);
+    $database = \Drupal::database();
+
+    $campos = array(
+      'nombre' => $form_state->getValue('nombre'),
+      'apellidos' => $form_state->getValue('apellidos'),
+      'email' => $form_state->getValue('email'),
+      'telefono' => $form_state->getValue('phone_number'),
+      'fecha' => $form_state->getValue('fecha_contratacion'),
+    );
+
+    $result = $database->insert('datospersonales')
+      ->fields($campos)
+      ->execute();
+
+    drupal_set_message(t( 'Datos guardados correctamente. Se ha creado el registro ' . $result ));
+
+    $form_state->setRedirect('form_example.mostrartodo');
 
     //$this->messenger()->addStatus($this->t('Su número de teléfono es: @number', ['@number' => $form_state->getValue('phone_number')]));
-    $this->messenger()->addStatus($this->t('Los datos fueron correctamente guardados.'));
 
-    $respuesta = new RedirectResponse($base_url, 302);
-    $respuesta->send();
-    return;
+    /*
+        $this->messenger()->addStatus($this->t('Los datos fueron correctamente guardados.'));
+
+        $respuesta = new RedirectResponse($base_url, 302);
+        $respuesta->send();
+        return;
+    */
 
   }
 

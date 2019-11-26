@@ -1,0 +1,94 @@
+<?php
+
+function form_example_schema() {
+  $schema['datospersonales'] = [
+    'description' => 'The base table for datos personales.',
+    'fields' => [
+      'id' => [
+        'description' => 'The primary identifier for the table datospersonales.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'nombre' => [
+        'description' => 'The personal name.',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'apellidos' => [
+        'description' => 'The personal surnames.',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'email' => [
+        'description' => 'The personal email.',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'telefono' => [
+        'description' => 'The personal telephone number.',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'fecha' => [
+        'description' => 'Fecha de contratación.',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+    ],
+    'primary key' => [
+      'id',
+    ],
+  ];
+  return $schema;
+}
+
+function form_example_install(){
+
+  $connection = \Drupal::database();
+
+  $values = [
+    [
+      'nombre' => 'Irene',
+      'apellidos' => 'Olgo',
+      'email' => 'a@a.es',
+      'telefono' => '1111',
+      'fecha' => '',
+    ],
+    [
+      'nombre' => 'Irene2',
+      'apellidos' => 'Olgo2',
+      'email' => 'a2@a2.es',
+      'telefono' => '22222',
+      'fecha' => '',
+    ],
+    [
+      'nombre' => 'Irene3',
+      'apellidos' => 'Olgo3',
+      'email' => 'a3@a3.es',
+      'telefono' => '33333',
+      'fecha' => '',
+    ],
+  ];
+
+  $query = $connection->insert('datospersonales')->fields(['nombre', 'apellidos', 'email', 'telefono', 'fecha']);
+
+  foreach ($values as $record) {
+    $query->values($record);
+  }
+
+  $query->execute();
+
+}
+
+?>
