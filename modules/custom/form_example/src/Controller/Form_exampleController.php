@@ -19,15 +19,33 @@ class Form_exampleController extends ControllerBase {
    */
 
     public function mostrarunregistro($arg) {
+      global $base_url;
+      $database = \Drupal::database();
+
       $contenido = [];
 
       $contenido['linea1'] = array(
-                                    '#markup' => '<strong>Esta información es confidencial. El id del registro es: ' . $arg . '</strong><br>',
+                                    '#markup' => '<strong>Esta información es confidencial.</strong><br><br>',
                                   );
+
+      $url = Url::fromUri( $base_url . '/form_example/' . $arg . '/edit');
+      $editar_link = \Drupal::l(t('Editar registro'), $url);
+      $row['editar'] = $editar_link;
+
+      $contenido['linea2'] = array(
+                                    '#markup' => $editar_link . '<br><br>',
+                                  );
+
 
       $registro = [];
       $registro = editform::listarunregistro($arg);
-      ksm($registro);
+      //ksm($registro);
+
+      $contenido[] =
+      [
+        '#theme' => 'form_example_template',
+        '#registro_id' => $registro[0],
+      ];
 
       return $contenido;
     }

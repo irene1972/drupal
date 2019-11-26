@@ -24,6 +24,7 @@
   public function buildForm(array $form, FormStateInterface $form_state) {
     //attach css and js files
     $form['#attached']['library'][] = 'form_example/form_example_libraries';
+    $form['#attached']['library'][] = 'seven/global-styling';
 
     //add markup
     $form['elemento_imagen'] = array(
