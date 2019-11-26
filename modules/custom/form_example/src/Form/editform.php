@@ -18,10 +18,26 @@
     return 'form_example_editform';
   }
 
+  public function listarunregistro($arg){
+    $database = \Drupal::database();
+    $query = $database->query("SELECT * FROM {datospersonales} WHERE id = :id",
+              [
+                ':id' => $arg,
+              ]);
+    $result = $query->fetchAll();
+
+    return $result;
+  }
+
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $arg = null) {
+
+    $registro = [];
+    $registro = $this->listarunregistro($arg);
+    //ksm($registro);
+
     //attach css and js files
     $form['#attached']['library'][] = 'form_example/form_example_libraries';
 
@@ -43,7 +59,7 @@
     $form['datos_personales']['nombre'] = array(
       '#type' => 'textfield',
       '#title' => t('Introduzca su nombre'),
-      //'#default_value' => $node->title,
+      '#default_value' => $registro[0]->nombre,
       '#size' => 60,
       '#maxlength' => 128,
       '#required' => true,
@@ -52,7 +68,7 @@
     $form['datos_personales']['apellidos'] = array(
       '#type' => 'textfield',
       '#title' => t('Introduzca sus apellidos'),
-      //'#default_value' => $node->title,
+      '#default_value' => $registro[0]->apellidos,
       '#size' => 150,
       '#maxlength' => 128,
       '#required' => false,
@@ -61,6 +77,7 @@
     $form['datos_personales']['email'] = array(
       '#type' => 'email',
       '#title' => t('Introduzca su email'),
+      '#default_value' => $registro[0]->email,
     );
     //************** FIN CONTENEDOR FIELDSET **************
 
@@ -74,13 +91,15 @@
     $form['datos_institucionales']['phone_number'] = [
       '#type' => 'tel',
       '#title' => $this->t('Introduzca su teléfono'),
+      '#default_value' => $registro[0]->telefono,
     ];
 
     $form['datos_institucionales']['fecha_contratacion'] = array(
       '#type' => 'date',
       '#title' => $this
         ->t('Fecha de contratación'),
-      '#default_value' => date(),
+      //'#default_value' => date(),
+      '#default_value' => $registro[0]->fecha,
     );
     //*************** FIN CONTENEDOR DETAILS ***************
 
@@ -106,6 +125,12 @@
         'class' => array('mibotonprincipal')
       ),
     ];
+
+    $form['idregistro'] = array(
+      '#type' => 'hidden',
+      '#value' => $arg,
+    );
+
     //******************************************************
     return $form;
   }
@@ -139,6 +164,8 @@
     global $base_url;
     $database = \Drupal::database();
 
+    $id = $form_state->getValue('idregistro');
+
     $campos = array(
       'nombre' => $form_state->getValue('nombre'),
       'apellidos' => $form_state->getValue('apellidos'),
@@ -146,12 +173,20 @@
       'telefono' => $form_state->getValue('phone_number'),
       'fecha' => $form_state->getValue('fecha_contratacion'),
     );
-
+/*
     $result = $database->insert('datospersonales')
       ->fields($campos)
       ->execute();
+*/
+    /* ******************** */
+    $database->update('datospersonales')
+      ->fields($campos)
+      ->condition('id', $id, '=')
+      ->execute();
+    /* ******************** */
 
-    drupal_set_message(t( 'Datos guardados correctamente. Se ha creado el registro ' . $result ));
+    //drupal_set_message(t( 'Datos guardados correctamente. Se ha creado el registro ' . $result ));
+    drupal_set_message(t( 'Datos guardados correctamente. Se ha actualizado el registro ' . $id ));
 
     $form_state->setRedirect('form_example.mostrartodo');
 
